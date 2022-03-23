@@ -1,7 +1,7 @@
 # Tesla
 
 
-« Allez Macha ! »
+«Hello Macha ! »
 
 Macha, pour Marie-Charlotte. Tu sens le fric, déjà, non ? Il fallait la voir parader dès son arrivée, éclatante dans sa tenue blanche au logo Adidas, jupette, polo et visière assortie, toute fardée, visage fermé, port altier de princesse intouchable, et commander un « ice tea » au bar. Avec l'accent surjoué, et tout. « Aïssti ». Macha, je veux te détruire. Depuis le début, dès que je t'ai vue, pire, entendue. C'est mon projet, comme dirait l'autre, et ce qu'est jouissif, c'est qu'on fait ça sur ton terrain. Aïssti. Je t'en foutrais.
 

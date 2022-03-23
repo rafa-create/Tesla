@@ -31,3 +31,5 @@ La gamine se prend pour Sharapova. Elle braille comme un goret qu'on égorge au 
 Des Macha, par la suite, j'en ai battu par paquets de douze. J'irai pas jusqu'à dire que j'étais respectée, non, quand même pas, juste considérée, et c'était déjà pas mal, dans ce milieu si hermétique au monde réel. Ils n'ont pas réussi à m'effacer.
 
 Je n'ai jamais revu Momo. Je ne suis pas devenue une championne de renom. Juste, j'existe.
+
+#Un roman digne des plus grands, une histoire à ne pas y croire

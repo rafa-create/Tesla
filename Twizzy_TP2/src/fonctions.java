@@ -55,7 +55,7 @@ public class fonctions{
 	
 	public static void seuillage() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m = main.lectureImage("circles.jpg");
+		Mat m = main.lectureImage("panneau30.jpg");
 		Mat hsv_image = Mat.zeros(m.size(),m.type());
 		Imgproc.cvtColor(m, hsv_image,Imgproc.COLOR_BGR2HSV);
 		Mat threshold_img = new Mat();
@@ -80,13 +80,13 @@ public class fonctions{
 	
 	public static void reconnaissance_cercles_rouges() {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m = main.lectureImage("photo9.jpg");
-		main.ImShow("Cercles", m);
+		Mat m = main.lectureImage("panneau30.jpg");
+		//main.ImShow("Cercles", m);
 		/*Mat hsv_image = Mat.zeros(m.size(),m.type());
 		Imgproc.cvtColor(m, hsv_image, Imgproc.COLOR_BGR2HSV);
 		main.ImShow("HSV", hsv_image);*/
 		Mat threshold_img = DetecterCercles(m);
-		main.ImShow("Seuillage", threshold_img);
+		//main.ImShow("Seuillage", threshold_img);
 		List<MatOfPoint> listContours = DetecterContours(threshold_img);
 		
 		MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
@@ -101,7 +101,7 @@ public class fonctions{
 				Core.circle(m, center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
-		main.ImShow("Détection des cercles rouges", m);
+		main.ImShow("Detection des cercles rouges", m);
 	
 		// Reconnaissance bales_rouges
 		for(int c=0; c<listContours.size();c++) {

@@ -69,16 +69,16 @@ public class main {
 		List<MatOfPoint> contours = fonctions.DetecterContours(m);
 		
 		/// PARTIE SEUILLAGE
-		//fonctions.seuillage();
+		fonctions.seuillage();
 		
 		// Seuillage 2
-		//System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		//Mat threshold_img = fonctions.DetecterCercles(m);
-		//main.ImShow("Cercles rouge", threshold_img);
+		Mat threshold_img = fonctions.DetecterCercles(m);
+		main.ImShow("Cercles rouge", threshold_img);
 		
 		
-		//fonctions.reconnaissance_cercles_rouges();
+		fonctions.reconnaissance_cercles_rouges();
 		
 	}
 	

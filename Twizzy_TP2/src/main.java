@@ -2,6 +2,7 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.InputStream;
+import java.util.List;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
@@ -13,14 +14,16 @@ import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfByte;
+import org.opencv.core.MatOfPoint;
 import org.opencv.highgui.Highgui;
+import org.opencv.imgproc.Imgproc;
 
 	// je fais un push
 public class main {
 	public static void main(String[] args) {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		Mat mat = Mat.eye(3, 3,CvType.CV_8UC1);
-		System.out.println("mat = "+mat.dump());
+		//System.out.println("mat = "+mat.dump());
 		
 		Mat matr = lectureImage("opencv.png");
 		// Lecture de l'image et retour de la matrice de l'image
@@ -29,7 +32,8 @@ public class main {
 		// Afichage du contenu de la matrice en mode texte avec des symboles
 		//afficheMat(matr);
 		
-		Mat m = lectureImage("bgr.png");
+		/*// Affichage bgr
+		Mat m = lectureImage("photo1.jpg");
 		Vector<Mat> channels = new Vector<Mat>();
 		Core.split(m, channels);
 		// BGR order
@@ -53,6 +57,27 @@ public class main {
 			Core.merge(chans, dst);
 			ImShow(Integer.toString(i),dst);
 		}
+		*/
+		
+		
+		/// PARTIE CONTOURS
+		Mat m = main.lectureImage("circles.jpg");
+		main.ImShow("Cercles", m);
+		Mat hsv_image = Mat.zeros(m.size(),m.type());
+		Imgproc.cvtColor(m, hsv_image, Imgproc.COLOR_BGR2HSV);
+		main.ImShow("HSV", hsv_image);
+		List<MatOfPoint> contours = fonctions.DetecterContours(m);
+		
+		/// PARTIE SEUILLAGE
+		fonctions.seuillage();
+		
+		// Seuillage 2
+		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+		Mat m1 = main.lectureImage("circles.jpg");
+		
+		Mat threshold_img = fonctions.DetecterCercles(m1);
+		main.ImShow("Cercles rouge", threshold_img);
+		
 	}
 	
 	public static Mat lectureImage(String fichier) {

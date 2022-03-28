@@ -78,6 +78,9 @@ public class main {
 		Mat threshold_img = fonctions.DetecterCercles(m1);
 		main.ImShow("Cercles rouge", threshold_img);
 		
+		
+		fonctions.reconnaissance_cercles_rouges();
+		
 	}
 	
 	public static Mat lectureImage(String fichier) {

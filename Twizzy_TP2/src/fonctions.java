@@ -1,13 +1,7 @@
-import java.awt.Image;
-import java.awt.Point;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.Vector;
-
-import javax.swing.ImageIcon;
 
 import org.opencv.core.Core;
 import org.opencv.core.CvType;
@@ -17,6 +11,7 @@ import org.opencv.core.MatOfInt4;
 import org.opencv.core.MatOfKeyPoint;
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.MatOfPoint2f;
+import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
@@ -90,7 +85,7 @@ public class fonctions{
 		/*Mat hsv_image = Mat.zeros(m.size(),m.type());
 		Imgproc.cvtColor(m, hsv_image, Imgproc.COLOR_BGR2HSV);
 		main.ImShow("HSV", hsv_image);*/
-		Mat threshold_img = seuillage2.DetecterCercles(m);
+		Mat threshold_img = DetecterCercles(m);
 		main.ImShow("Seuillage", threshold_img);
 		List<MatOfPoint> listContours = DetecterContours(threshold_img);
 		
@@ -126,7 +121,7 @@ public class fonctions{
 				main.ImShow("Ball", ball);
 				
 				// Mise à l'échelle
-				Mat sroadSign = Highgui.imread("panneau110.png");
+				Mat sroadSign = Highgui.imread("ball_three.png");
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());
 				Mat grayObject = new Mat(sObject.rows(),sObject.cols(),sObject.type());

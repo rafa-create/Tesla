@@ -40,7 +40,7 @@ public class fonctions{
 			Scalar color = new Scalar(rand.nextInt(255 - 0 + 1),rand.nextInt(255 - 0 + 1),rand.nextInt(255 - 0 + 1));
 			Imgproc.drawContours(drawing, contours, i, color,1);
 		}
-		main.ImShow("Contours", drawing);
+		//main.ImShow("Contours", drawing);
 		return contours;
 	}
 	
@@ -53,15 +53,19 @@ public class fonctions{
 		Vector<Mat> channels = new Vector<Mat>();
 	}*/
 	
-	public static void seuillage() {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m = main.lectureImage("panneau30.jpg");
+	public static void seuillage(Mat m) {
 		Mat hsv_image = Mat.zeros(m.size(),m.type());
 		Imgproc.cvtColor(m, hsv_image,Imgproc.COLOR_BGR2HSV);
 		Mat threshold_img = new Mat();
 		Core.inRange(hsv_image, new Scalar(0,100,100), new Scalar(10,255,255), threshold_img);
 		Imgproc.GaussianBlur(threshold_img, threshold_img, new Size(9,9), 2,2);
-		main.ImShow("Cercles rouge", threshold_img);
+		
+		/* affiche en noir et blanc le contours rouge du panneau
+		on aura besoin de la fonction après pour extraire le panneau 
+		de l'image mais pas besoin de l'afficher */
+		
+		
+		//main.ImShow("Cercles rouge", threshold_img);
 	}
 	
 	public static Mat DetecterCercles(Mat m) {
@@ -75,18 +79,12 @@ public class fonctions{
 		Core.bitwise_or(threshold_img1, threshold_img2, threshold_img);
 		Imgproc.GaussianBlur(threshold_img, threshold_img, new Size(9,9), 2,2);
 		
+		// deuxieme maniere de faire le seuillage
 		return threshold_img;
 	}
 	
-	public static void reconnaissance_cercles_rouges() {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m = main.lectureImage("panneau30.jpg");
-		//main.ImShow("Cercles", m);
-		/*Mat hsv_image = Mat.zeros(m.size(),m.type());
-		Imgproc.cvtColor(m, hsv_image, Imgproc.COLOR_BGR2HSV);
-		main.ImShow("HSV", hsv_image);*/
+	public static void reconnaissance_cercles_rouges(Mat m) {
 		Mat threshold_img = DetecterCercles(m);
-		//main.ImShow("Seuillage", threshold_img);
 		List<MatOfPoint> listContours = DetecterContours(threshold_img);
 		
 		MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
@@ -103,7 +101,7 @@ public class fonctions{
 		}
 		main.ImShow("Detection des cercles rouges", m);
 	
-		// Reconnaissance bales_rouges
+		// Reconnaissance balles_rouges
 		for(int c=0; c<listContours.size();c++) {
 			MatOfPoint contour = listContours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
@@ -118,10 +116,10 @@ public class fonctions{
 				Mat tmp = m.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
 				Mat ball = Mat.zeros(tmp.size(), tmp.type());
 				tmp.copyTo(ball);
-				main.ImShow("Ball", ball);
+				//main.ImShow("Ball", ball);
 				
 				// Mise à l'échelle
-				Mat sroadSign = Highgui.imread("ball_three.png");
+				Mat sroadSign = Highgui.imread("panneau30.jpg");
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());
 				Mat grayObject = new Mat(sObject.rows(),sObject.cols(),sObject.type());

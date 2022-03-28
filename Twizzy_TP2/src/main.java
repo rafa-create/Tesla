@@ -61,25 +61,24 @@ public class main {
 		
 		
 		/// PARTIE CONTOURS
-		Mat m = main.lectureImage("circles.jpg");
-		main.ImShow("Cercles", m);
+		Mat m = main.lectureImage("panneau30.jpg");
+		main.ImShow("Image normale", m);
 		Mat hsv_image = Mat.zeros(m.size(),m.type());
 		Imgproc.cvtColor(m, hsv_image, Imgproc.COLOR_BGR2HSV);
-		main.ImShow("HSV", hsv_image);
+		//main.ImShow("HSV", hsv_image);
 		List<MatOfPoint> contours = fonctions.DetecterContours(m);
 		
 		/// PARTIE SEUILLAGE
-		fonctions.seuillage();
+		//fonctions.seuillage();
 		
 		// Seuillage 2
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m1 = main.lectureImage("circles.jpg");
+		//System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		
-		Mat threshold_img = fonctions.DetecterCercles(m1);
-		main.ImShow("Cercles rouge", threshold_img);
+		//Mat threshold_img = fonctions.DetecterCercles(m);
+		//main.ImShow("Cercles rouge", threshold_img);
 		
 		
-		fonctions.reconnaissance_cercles_rouges();
+		//fonctions.reconnaissance_cercles_rouges();
 		
 	}
 	

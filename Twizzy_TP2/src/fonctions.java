@@ -14,24 +14,78 @@ import org.opencv.core.MatOfPoint2f;
 import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+import java.util.ArrayList;
 
-public class reconnaissance_cercles_rouges {
-	public static void main(String[] args) {
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		Mat m = main.lectureImage("photo9.jpg");
-		main.ImShow("Cercles", m);
-		/*Mat hsv_image = Mat.zeros(m.size(),m.type());
-		Imgproc.cvtColor(m, hsv_image, Imgproc.COLOR_BGR2HSV);
-		main.ImShow("HSV", hsv_image);*/
-		Mat threshold_img = seuillage2.DetecterCercles(m);
-		main.ImShow("Seuillage", threshold_img);
-		List<MatOfPoint> listContours = contours.DetecterContours(threshold_img);
+
+public class fonctions{
+	public static List<MatOfPoint> DetecterContours(Mat threshold_img){
+		//Mat threshold_img = seuillage2.DetecterCercles(m);
+		//main.ImShow("Seuillage", threshold_img);
+		int thresh = 100;
+		Mat canny_output = new Mat();
+		List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
+		MatOfInt4 hierarchy = new MatOfInt4();
+		Imgproc.Canny(threshold_img, canny_output, thresh, thresh*2);
+		Imgproc.findContours(canny_output, contours, hierarchy, Imgproc.RETR_EXTERNAL, Imgproc.CHAIN_APPROX_SIMPLE);
+		Mat drawing = Mat.zeros(canny_output.size(), CvType.CV_8UC3);
+		Random rand = new Random();
+		for(int i=0;i<contours.size();i++) {
+			Scalar color = new Scalar(rand.nextInt(255 - 0 + 1),rand.nextInt(255 - 0 + 1),rand.nextInt(255 - 0 + 1));
+			Imgproc.drawContours(drawing, contours, i, color,1);
+		}
+		//main.ImShow("Contours", drawing);
+		return contours;
+	}
+	
+	// PASSAGE HSV PAS FAIT 
+	/*public static void passageHSV() {
+		Mat m= main.lectureImage("hsv.png");
+		Mat output = Mat.zeros(m.size(),m.type());
+		//Imgproc.cvtColor(m, output, Imgproc.COLOR_BGR2HSV);
+		main.ImShow("HSV",output);
+		Vector<Mat> channels = new Vector<Mat>();
+	}*/
+	
+	public static void seuillage(Mat m) {
+		Mat hsv_image = Mat.zeros(m.size(),m.type());
+		Imgproc.cvtColor(m, hsv_image,Imgproc.COLOR_BGR2HSV);
+		Mat threshold_img = new Mat();
+		Core.inRange(hsv_image, new Scalar(0,100,100), new Scalar(10,255,255), threshold_img);
+		Imgproc.GaussianBlur(threshold_img, threshold_img, new Size(9,9), 2,2);
+		
+		/* affiche en noir et blanc le contours rouge du panneau
+		on aura besoin de la fonction après pour extraire le panneau 
+		de l'image mais pas besoin de l'afficher */
+		
+		
+		//main.ImShow("Cercles rouge", threshold_img);
+	}
+	
+	public static Mat DetecterCercles(Mat m) {
+		Mat hsv_image = Mat.zeros(m.size(),m.type());
+		Imgproc.cvtColor(m, hsv_image,Imgproc.COLOR_BGR2HSV);
+		Mat threshold_img = new Mat();
+		Mat threshold_img1 = new Mat();
+		Mat threshold_img2 = new Mat();
+		Core.inRange(hsv_image, new Scalar(0,100,100), new Scalar(10,255,255), threshold_img1);
+		Core.inRange(hsv_image, new Scalar(160,100,100), new Scalar(179,255,255), threshold_img2);
+		Core.bitwise_or(threshold_img1, threshold_img2, threshold_img);
+		Imgproc.GaussianBlur(threshold_img, threshold_img, new Size(9,9), 2,2);
+		
+		// deuxieme maniere de faire le seuillage
+		return threshold_img;
+	}
+	
+	public static void reconnaissance_cercles_rouges(Mat m) {
+		Mat threshold_img = DetecterCercles(m);
+		List<MatOfPoint> listContours = DetecterContours(threshold_img);
 		
 		MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
 		float[] radius = new float[1];
@@ -45,9 +99,9 @@ public class reconnaissance_cercles_rouges {
 				Core.circle(m, center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
-	main.ImShow("Détection des cercles rouges", m);
+		main.ImShow("Detection des cercles rouges", m);
 	
-		// Reconnaissance bales_rouges
+		// Reconnaissance balles_rouges
 		for(int c=0; c<listContours.size();c++) {
 			MatOfPoint contour = listContours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
@@ -62,10 +116,10 @@ public class reconnaissance_cercles_rouges {
 				Mat tmp = m.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
 				Mat ball = Mat.zeros(tmp.size(), tmp.type());
 				tmp.copyTo(ball);
-				main.ImShow("Ball", ball);
+				//main.ImShow("Ball", ball);
 				
 				// Mise à l'échelle
-				Mat sroadSign = Highgui.imread("panneau110.png");
+				Mat sroadSign = Highgui.imread("panneau30.jpg");
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());
 				Mat grayObject = new Mat(sObject.rows(),sObject.cols(),sObject.type());
@@ -102,4 +156,5 @@ public class reconnaissance_cercles_rouges {
 			}
 		}	
 	}
+
 }

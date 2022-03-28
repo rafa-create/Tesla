@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
+
 import javax.swing.ImageIcon;
 
 import org.opencv.core.Core;
@@ -106,7 +107,7 @@ public class fonctions{
 				Core.circle(m, center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
-		main.ImShow("Détection des cercles rouges", m);
+		main.ImShow("DÃ©tection des cercles rouges", m);
 	
 		// Reconnaissance bales_rouges
 		for(int c=0; c<listContours.size();c++) {
@@ -125,7 +126,7 @@ public class fonctions{
 				tmp.copyTo(ball);
 				main.ImShow("Ball", ball);
 				
-				// Mise à l'échelle
+				// Mise Ã  l'Ã©chelle
 				Mat sroadSign = Highgui.imread("panneau110.png");
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());

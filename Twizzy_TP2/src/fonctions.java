@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.Vector;
 
-
 import javax.swing.ImageIcon;
 
 import org.opencv.core.Core;

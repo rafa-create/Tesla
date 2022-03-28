@@ -101,7 +101,7 @@ public class fonctions{
 				Core.circle(m, center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
-		main.ImShow("Détection des cercles rouges", m);
+		main.ImShow("DÃ©tection des cercles rouges", m);
 	
 		// Reconnaissance bales_rouges
 		for(int c=0; c<listContours.size();c++) {

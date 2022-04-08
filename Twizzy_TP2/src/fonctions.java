@@ -1,4 +1,5 @@
 
+
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -66,7 +67,7 @@ public class fonctions{
 		Imgproc.GaussianBlur(threshold_img, threshold_img, new Size(9,9), 2,2);
 		
 		/* affiche en noir et blanc le contours rouge du panneau
-		on aura besoin de la fonction après pour extraire le panneau 
+		on aura besoin de la fonction aprÃ¨s pour extraire le panneau 
 		de l'image mais pas besoin de l'afficher */
 		
 		
@@ -124,7 +125,7 @@ public class fonctions{
 				tmp.copyTo(ball);
 				//main.ImShow("Ball", ball);
 				
-				// Mise à l'échelle
+				// Mise Ã  l'Ã©chelle
 				Mat sroadSign = Highgui.imread(signfile);
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());
@@ -166,7 +167,7 @@ public class fonctions{
 				
 				
 				
-				// Méthode DescriptorMatcher
+				// MÃ©thode DescriptorMatcher
 				List<DMatch> matchesList = matchs.toList();
 				Double max_dist = 0.0;
 				Double min_dist = 100.0;
@@ -215,32 +216,32 @@ public class fonctions{
             double scoremax=scores[0];
             for(int j=1;j<scores.length;j++){
                 if (scores[j]>scoremax){scoremax=scores[j];indexmax=j;}}
-            if(scoremax<0){System.out.println("Aucun Panneau detecté");}
+            if(scoremax<0){System.out.println("Aucun Panneau detectÃ©");}
             else{switch(indexmax){
 
                 case -1:;break;
                 case 0:
-                	System.out.println("Panneau 30 detecté");
+                	System.out.println("Panneau 30 detectÃ©");
                  
                     break;
                 case 1:
-                	System.out.println("Panneau 50 detecté");
+                	System.out.println("Panneau 50 detectÃ©");
                     
                     break;
                 case 2:
-                	System.out.println("Panneau 70 detecté");
+                	System.out.println("Panneau 70 detectÃ©");
                     
                     break;
                 case 3:
-                	System.out.println("Panneau 90 detecté");
+                	System.out.println("Panneau 90 detectÃ©");
                     
                     break;
                 case 4:
-                	System.out.println("Panneau 110 detecté");
+                	System.out.println("Panneau 110 detectÃ©");
                     
                     break;
                 case 5:
-                	System.out.println("Panneau interdiction de dépasser detecté");
+                	System.out.println("Panneau interdiction de dÃ©passer detectÃ©");
                     
                     break;
             }

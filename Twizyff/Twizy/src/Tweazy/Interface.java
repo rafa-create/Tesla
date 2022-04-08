@@ -98,7 +98,7 @@ public class Interface extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
                 Mat m=Highgui.imread(imgFile.getText(),Highgui.CV_LOAD_IMAGE_COLOR);
-                //Conversion du panneau extrait de l'image en gris et normalisation et redimensionnement a la taille du panneau de réference
+                //Conversion du panneau extrait de l'image en gris et normalisation et redimensionnement a la taille du panneau de rÃ©ference
                 Mat grayObject = new Mat(m.rows(), m.cols(), m.type());
                 Imgproc.cvtColor(m, grayObject, Imgproc.COLOR_BGRA2GRAY);
                 panel_1.removeAll();
@@ -146,7 +146,7 @@ public class Interface extends JFrame {
         btnSaturationRouge.setBounds(10, 115, 140, 20);
         panel.add(btnSaturationRouge);
 
-        JButton btnContours = new JButton("Détecte contours");
+        JButton btnContours = new JButton("DÃ©tecte contours");
         btnContours.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 panneau.setText("");
@@ -181,20 +181,20 @@ public class Interface extends JFrame {
         btnContours.setBounds(10, 150, 140, 20);
         panel.add(btnContours);
 
-        JButton btnMatching = new JButton("Détection");
+        JButton btnMatching = new JButton("DÃ©tection");
         btnMatching.addActionListener(new ActionListener() {
                                           public void actionPerformed(ActionEvent e) {
                                               String fileImg = "";
                                               //Ouverture le l'image et saturation des rouges
                                               System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
                                               Mat m=Highgui.imread(imgFile.getText(),Highgui.CV_LOAD_IMAGE_COLOR);
-                                              //MaBibliothequeTraitementImageEtendue.afficheImage("Image testée", m);
+                                              //MaBibliothequeTraitementImageEtendue.afficheImage("Image testÃ©e", m);
                                               Mat transformee=MaBibliothequeTraitementImageEtendue.transformeBGRversHSV(m);
                                               //la methode seuillage est ici extraite de l'archivage jar du meme nom
                                               Mat saturee=MaBibliothequeTraitementImage.seuillage(transformee, 6, 170, 90);
                                               Mat objetrond = null;
 
-                                              //Création d'une liste des contours a partir de l'image saturée
+                                              //CrÃ©ation d'une liste des contours a partir de l'image saturÃ©e
                                               List<MatOfPoint> ListeContours= MaBibliothequeTraitementImageEtendue.ExtractContours(saturee);
                                               double [] scores=new double [6];
                                               //Pour tous les contours de la liste
@@ -210,37 +210,37 @@ public class Interface extends JFrame {
                                                       scores[5]=MaBibliothequeTraitementImageEtendue.Similitude(objetrond,"refdouble.jpg");
 
 
-                                                      //recherche de l'index du maximum et affichage du panneau detecté
+                                                      //recherche de l'index du maximum et affichage du panneau detectÃ©
                                                       double scoremax=-1;
                                                       int indexmax=0;
                                                       for(int j=0;j<scores.length;j++){
                                                           if (scores[j]>scoremax){scoremax=scores[j];indexmax=j;}}
-                                                      if(scoremax<0){System.out.println("Aucun Panneau détecté");}
+                                                      if(scoremax<0){System.out.println("Aucun Panneau dÃ©tectÃ©");}
                                                       else{switch(indexmax){
 
                                                           case -1:;break;
                                                           case 0:
-                                                              panneau.setText("Panneau 30 détecté");
+                                                              panneau.setText("Panneau 30 dÃ©tectÃ©");
                                                               fileImg="ref30.jpg";
                                                               break;
                                                           case 1:
-                                                              panneau.setText("Panneau 50 détecté");
+                                                              panneau.setText("Panneau 50 dÃ©tectÃ©");
                                                               fileImg="ref50.jpg";
                                                               break;
                                                           case 2:
-                                                              panneau.setText("Panneau 70 détecté");
+                                                              panneau.setText("Panneau 70 dÃ©tectÃ©");
                                                               fileImg="ref70.jpg";
                                                               break;
                                                           case 3:
-                                                              panneau.setText("Panneau 90 détecté");
+                                                              panneau.setText("Panneau 90 dÃ©tectÃ©");
                                                               fileImg="ref90.jpg";
                                                               break;
                                                           case 4:
-                                                              panneau.setText("Panneau 110 détecté");
+                                                              panneau.setText("Panneau 110 dÃ©tectÃ©");
                                                               fileImg="ref110.jpg";
                                                               break;
                                                           case 5:
-                                                              panneau.setText("Panneau interdiction de dépasser détecté");
+                                                              panneau.setText("Panneau interdiction de dÃ©passer dÃ©tectÃ©");
                                                               fileImg="refdouble.jpg";
                                                               break;
                                                       }
@@ -265,8 +265,8 @@ public class Interface extends JFrame {
         panneau.setColumns(10);
 
 
-        //Bouton Vidéo
-        JButton btnVideo = new JButton("Lancer la vidéo");
+        //Bouton VidÃ©o
+        JButton btnVideo = new JButton("Lancer la vidÃ©o");
         btnVideo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -306,7 +306,7 @@ public class Interface extends JFrame {
             //la methode seuillage est ici extraite de l'archivage jar du meme nom
             Mat saturee=MaBibliothequeTraitementImage.seuillage(transformee, 6, 170, 90);
             Mat objetrond = null;
-            //Création d'une liste des contours a partir de l'image saturée
+            //CrÃ©ation d'une liste des contours a partir de l'image saturÃ©e
             List<MatOfPoint> ListeContours= MaBibliothequeTraitementImageEtendue.ExtractContours(saturee);
             int indexmax=0;
             for (MatOfPoint contour: ListeContours  ){
@@ -316,27 +316,27 @@ public class Interface extends JFrame {
                     case -1:
                         break;
                     case 0:
-                        panneau.setText("Panneau 30 détecté");
+                        panneau.setText("Panneau 30 dÃ©tectÃ©");
                         fileImg="ref30.jpg";
                         break;
                     case 1:
-                        panneau.setText("Panneau 50 détecté");
+                        panneau.setText("Panneau 50 dÃ©tectÃ©");
                         fileImg="ref50.jpg";
                         break;
                     case 2:
-                        panneau.setText("Panneau 70 détecté");
+                        panneau.setText("Panneau 70 dÃ©tectÃ©");
                         fileImg="ref70.jpg";
                         break;
                     case 3:
-                        panneau.setText("Panneau 90 détecté");
+                        panneau.setText("Panneau 90 dÃ©tectÃ©");
                         fileImg="ref90.jpg";
                         break;
                     case 4:
-                        panneau.setText("Panneau 110 détecté");
+                        panneau.setText("Panneau 110 dÃ©tectÃ©");
                         fileImg="ref110.jpg";
                         break;
                     case 5:
-                        panneau.setText("Panneau interdiction de dépasser détecté");
+                        panneau.setText("Panneau interdiction de dÃ©passer dÃ©tectÃ©");
                         fileImg="refdouble.jpg";
                         break;
                 }

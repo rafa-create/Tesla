@@ -78,8 +78,10 @@ public class main {
 		Mat threshold_img = fonctions.DetecterCercles(m);
 		//main.ImShow("Cercles rouge", threshold_img);
 		
-		
-		fonctions.reconnaissance_cercles_rouges(m);
+		Mat m2 = main.lectureImage("photo6.jpg");
+		String panneau = "panneau30.jpg";
+		fonctions.reconnaissance_cercles_rouges(m2,panneau);
+		fonctions.identifiepanneau(m2);
 		
 	}
 	

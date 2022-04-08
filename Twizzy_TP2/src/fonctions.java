@@ -1,5 +1,6 @@
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,12 +16,16 @@ import org.opencv.core.Point;
 import org.opencv.core.Rect;
 import org.opencv.core.Scalar;
 import org.opencv.core.Size;
+import org.opencv.features2d.DMatch;
 import org.opencv.features2d.DescriptorExtractor;
 import org.opencv.features2d.DescriptorMatcher;
 import org.opencv.features2d.FeatureDetector;
 import org.opencv.features2d.Features2d;
 import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
+
+
+
 import java.util.ArrayList;
 
 
@@ -83,7 +88,8 @@ public class fonctions{
 		return threshold_img;
 	}
 	
-	public static void reconnaissance_cercles_rouges(Mat m) {
+	public static double reconnaissance_cercles_rouges(Mat m,String signfile) {
+		double total = 0.0;
 		Mat threshold_img = DetecterCercles(m);
 		List<MatOfPoint> listContours = DetecterContours(threshold_img);
 		
@@ -99,7 +105,7 @@ public class fonctions{
 				Core.circle(m, center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
-		main.ImShow("Detection des cercles rouges", m);
+		//main.ImShow("Detection des cercles rouges", m);
 	
 		// Reconnaissance balles_rouges
 		for(int c=0; c<listContours.size();c++) {
@@ -119,7 +125,7 @@ public class fonctions{
 				//main.ImShow("Ball", ball);
 				
 				// Mise à l'échelle
-				Mat sroadSign = Highgui.imread("panneau30.jpg");
+				Mat sroadSign = Highgui.imread(signfile);
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());
 				Mat grayObject = new Mat(sObject.rows(),sObject.cols(),sObject.type());
@@ -149,12 +155,98 @@ public class fonctions{
 				MatOfDMatch matchs = new MatOfDMatch();
 				DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
 				matcher.match(objectDescriptor, signDescriptor,matchs);
-				System.out.println(matchs.dump());
+				
+				//System.out.println(matchs.total());
+				
 				Mat matchedImage = new Mat(sroadSign.rows(),sroadSign.cols()*2,sroadSign.type());
 				Features2d.drawMatches(sObject, objectKeypoints, sroadSign, signKeypoints, matchs, matchedImage);
-				main.ImShow("matchs", matchedImage);
+				
+				
+				//main.ImShow("matchs", matchedImage);
+				
+				
+				
+				// Méthode DescriptorMatcher
+				List<DMatch> matchesList = matchs.toList();
+				Double max_dist = 0.0;
+				Double min_dist = 100.0;
+		
+				for (int i = 0; i < matchesList.size(); i++) {
+					
+
+				    Double dist = (double) matchesList.get(i).distance;
+				    if (dist < min_dist)
+				        min_dist = dist;
+				    if (dist > max_dist)
+				    max_dist = dist;
+				}
+		
+				LinkedList<DMatch> good_matches = new LinkedList<DMatch>();
+				for (int i = 0; i < matchesList.size(); i++)  {  
+				    if (matchesList.get(i).distance <= (3 * min_dist))
+				    good_matches.addLast(matchesList.get(i));
+				}
+				float[] distances = new float[good_matches.size()];
+				for(int i=0;i<good_matches.size();i++) {
+					distances[i]=good_matches.get(i).distance;
+				}
+				double moyenne = 0;
+				for (int i=0;i<distances.length; i++) {
+					moyenne+=distances[i];
+				}
+				total = moyenne/distances.length;
+				//System.out.println(total);
+				
+		
 			}
 		}	
+		return total;
 	}
+    public static void identifiepanneau(Mat objetrond){
+        double [] scores=new double [6];
+        int indexmax=-1;
+        if (objetrond!=null){
+            scores[0]=reconnaissance_cercles_rouges(objetrond,"panneau30.jpg");
+            scores[1]=reconnaissance_cercles_rouges(objetrond,"panneau50.jpg");
+            scores[2]=reconnaissance_cercles_rouges(objetrond,"panneau70.jpg");
+            scores[3]=reconnaissance_cercles_rouges(objetrond,"panneau90.jpg");
+            scores[4]=reconnaissance_cercles_rouges(objetrond,"panneau110.jpg");
+            scores[5]=reconnaissance_cercles_rouges(objetrond,"panneau_interdiction_doubler.jpg");
+            double scoremax=scores[0];
+            for(int j=1;j<scores.length;j++){
+                if (scores[j]>scoremax){scoremax=scores[j];indexmax=j;}}
+            if(scoremax<0){System.out.println("Aucun Panneau detecté");}
+            else{switch(indexmax){
+
+                case -1:;break;
+                case 0:
+                	System.out.println("Panneau 30 detecté");
+                 
+                    break;
+                case 1:
+                	System.out.println("Panneau 50 detecté");
+                    
+                    break;
+                case 2:
+                	System.out.println("Panneau 70 detecté");
+                    
+                    break;
+                case 3:
+                	System.out.println("Panneau 90 detecté");
+                    
+                    break;
+                case 4:
+                	System.out.println("Panneau 110 detecté");
+                    
+                    break;
+                case 5:
+                	System.out.println("Panneau interdiction de dépasser detecté");
+                    
+                    break;
+            }
+            }
+
+        }
+    }
 
 }

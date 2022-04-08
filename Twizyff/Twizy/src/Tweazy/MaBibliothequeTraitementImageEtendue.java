@@ -96,7 +96,7 @@ public class MaBibliothequeTraitementImageEtendue {
 
     //Methode qui permet d'extraire les contours d'une image donnee
     public static List<MatOfPoint> ExtractContours(Mat input) {
-        // Detecter les contours des formes trouv�es
+        // Detecter les contours des formes trouvï¿½es
         int thresh = 100;
         Mat canny_output = new Mat();
         List<MatOfPoint> contours = new ArrayList<MatOfPoint>();
@@ -120,8 +120,8 @@ public class MaBibliothequeTraitementImageEtendue {
     }
 
     //Methode qui permet de decouper et identifier les contours carres, triangulaires ou rectangulaires.
-    //Renvoie null si aucun contour rond n'a ete trouvé.
-    //Renvoie une matrice carrée englobant un contour rond si un contour rond a été trouvé
+    //Renvoie null si aucun contour rond n'a ete trouvÃ©.
+    //Renvoie une matrice carrÃ©e englobant un contour rond si un contour rond a Ã©tÃ© trouvÃ©
     public static Mat DetectForm(Mat img,MatOfPoint contour) {
         MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
         MatOfPoint2f approxCurve = new MatOfPoint2f();
@@ -135,7 +135,7 @@ public class MaBibliothequeTraitementImageEtendue {
         // Cherche le plus petit cercle entourant le contour
         Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
         //System.out.println(contourArea+" "+Math.PI*radius[0]*radius[0]);
-        //on dit que c'est un cercle si l'aire occupé par le contour est a supérieure a  80% de l'aire occupée par un cercle parfait
+        //on dit que c'est un cercle si l'aire occupÃ© par le contour est a supÃ©rieure a  80% de l'aire occupÃ©e par un cercle parfait
         if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.8) {
             //System.out.println("Cercle");
             Core.circle(img, center, (int)radius[0], new Scalar(255, 0, 0), 2);
@@ -202,120 +202,133 @@ public class MaBibliothequeTraitementImageEtendue {
         return Math.floor(alpha * 180. / Math.PI + 0.5);
     }
 
-
+	public static Mat DetecterCercles(Mat m) {
+		Mat hsv_image = Mat.zeros(m.size(),m.type());
+		Imgproc.cvtColor(m, hsv_image,Imgproc.COLOR_BGR2HSV);
+		Mat threshold_img = new Mat();
+		Mat threshold_img1 = new Mat();
+		Mat threshold_img2 = new Mat();
+		Core.inRange(hsv_image, new Scalar(0,100,100), new Scalar(10,255,255), threshold_img1);
+		Core.inRange(hsv_image, new Scalar(160,100,100), new Scalar(179,255,255), threshold_img2);
+		Core.bitwise_or(threshold_img1, threshold_img2, threshold_img);
+		Imgproc.GaussianBlur(threshold_img, threshold_img, new Size(9,9), 2,2);
+		
+		// deuxieme maniere de faire le seuillage
+		return threshold_img;
+	}
+	
     //methode a completer
     public static double Similitude(Mat object,String signfile) {
-        // Conversion du panneau de reference "signfile" en niveaux de gris et normalisation
-        Mat panneauref = Highgui.imread(signfile);
-        Mat graySign = new Mat(panneauref.rows(), panneauref.cols(), panneauref.type());
-        Imgproc.cvtColor(panneauref, graySign, Imgproc.COLOR_BGRA2GRAY);
-        Core.normalize(graySign, graySign, 0, 255, Core.NORM_MINMAX);
-        Mat signeNoirEtBlanc=new Mat();
+    	double total = 0.0;
+    	
+    	Mat threshold_img = DetecterCercles(object);
+		List<MatOfPoint> listContours = ExtractContours(threshold_img);
+		
+		MatOfPoint2f matOfPoint2f = new MatOfPoint2f();
+		float[] radius = new float[1];
+		Point center = new Point();
+		for(int c=0;c<listContours.size();c++) {
+			MatOfPoint contour = listContours.get(c);
+			double contourArea = Imgproc.contourArea(contour);
+			matOfPoint2f.fromList(contour.toList());
+			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
+			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8) {
+				Core.circle(object, center, (int)radius[0], new Scalar(0,255,0),2);
+			}
+		}
+		//main.ImShow("Detection des cercles rouges", m);
+	
+		// Reconnaissance balles_rouges
+		for(int c=0; c<listContours.size();c++) {
 
-
-
-        //Conversion du panneau extrait de l'image en gris et normalisation et redimensionnement a la taille du panneau de réference
-        Mat grayObject = new Mat(panneauref.rows(), panneauref.cols(), panneauref.type());
-        Imgproc.resize(object, object, graySign.size());
-        //afficheImage("Panneau extrait de l'image",object);
-        Imgproc.cvtColor(object, grayObject, Imgproc.COLOR_BGRA2GRAY);
-        Core.normalize(grayObject, grayObject, 0, 255, Core.NORM_MINMAX);
-        //Imgproc.resize(grayObject, grayObject, graySign.size());
-
-
-
-        Mat outputImage=new Mat();
-        int machMethod=Imgproc.TM_CCOEFF;
-        //Template matching method
-        Imgproc.matchTemplate(grayObject, graySign, outputImage, machMethod);
-
-        MinMaxLocResult mmr = Core.minMaxLoc(outputImage);
-        Point matchLoc=mmr.maxLoc;
-        //         if (machMethod == Imgproc.TM_SQDIFF
-        //                 || machMethod == Imgproc.TM_SQDIFF_NORMED) {
-        //             matchLoc = mmr.minLoc;
-        //             //System.out.println(mmr.minVal);
-        //         } else {
-        //             matchLoc = mmr.maxLoc;
-        //             //System.out.println(mmr.maxVal);
-        //         }
-
-        // / Show me what you got
-        //         Core.rectangle(grayObject, matchLoc, new Point(matchLoc.x + graySign.cols(),
-        //                 matchLoc.y + graySign.rows()), new Scalar(0, 255, 0));
-
-        // Save the visualized detection.
-        // Highgui.imwrite("p10.jpg", grayObject);
-        // System.out.println(signfile+ "      "+ mmr.minVal);
-        FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
-        DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
-
-        MatOfKeyPoint objectKeypoints = new MatOfKeyPoint();
-        orbDetector.detect(grayObject, objectKeypoints);
-
-        MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
-        orbDetector.detect(graySign, signKeypoints);
-
-        Mat objectDescriptor = new Mat(object.rows(), object.cols(), object.type());
-        orbExtractor.compute(grayObject,  objectKeypoints,  objectDescriptor);
-
-        Mat signDescriptor = new Mat(panneauref.rows(), panneauref.cols(), panneauref.type());
-        orbExtractor.compute(graySign,  signKeypoints,  signDescriptor);
-
-        //Faire le matching
-        MatOfDMatch matchs = new MatOfDMatch();
-        DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
-        matcher.match(objectDescriptor, signDescriptor,matchs);
-        //System.out.println(matchs.dump());
-        Mat matchedImage = new Mat(panneauref.rows(), panneauref.cols()*2, panneauref.type());
-        Features2d.drawMatches(object, objectKeypoints, panneauref, signKeypoints, matchs, matchedImage);
-        //System.out.println(matchs.total());
-        //MaBibliothequeTraitementImage.afficheImage("matches",matchedImage);
-        //List<Double> distances=new ArrayList<Double>();
-
-        //Binarisation de l'image
-        for(int i=0;i<grayObject.height();i++) {
-            for(int j=0;j<grayObject.width();j++) {
-                double[] grayPixelObject = grayObject.get(i, j);
-                if(grayPixelObject[0]>100) { // grayPixelObject=[Blanc, Noir]
-                    grayObject.put(i, j, 255);
-                }
-                else {
-                    grayObject.put(i, j, 0);
-                }
-            }
-        }
-        // Restriction de l'image a la zone qui nous intéresse
-        for (int i=0;i<grayObject.height();i++) {
-            for (int j=0; j<grayObject.width(); j++) {
-                if (i<75 || i>185 || j<60 || j>200) {
-                    grayObject.put(i, j, 255);
-                }
-            }
-        }
-        Highgui.imwrite("dernierTest.png",grayObject);
-        File imageFile = new File("dernierTest.png");
-
-        ITesseract instance = new Tesseract();
-        instance.setDatapath("/usr/local/Cellar/tesseract/4.1.1/share/tessdata");
-        try {
-
-            String result = instance.doOCR(imageFile);
-            result = result.split("\n")[0];
-
-            String panneau = signfile.split("ref")[1].split(".jpg")[0];
-            if (result.equals(panneau)) {
-                return 1;
-            }
-            if (result.contains("11") && panneau.equals("double")) {
-                return 1;
-            }
-
-        } catch (TesseractException e) {
-            e.printStackTrace();
-        }
-        return 0;
+			
+			MatOfPoint contour = listContours.get(c);
+			double contourArea = Imgproc.contourArea(contour);
+			matOfPoint2f.fromList(contour.toList());
+			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
+			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8){
+				Core.circle(object, center, (int)radius[0], new Scalar(0,255,0),2);
+				Rect rect = Imgproc.boundingRect(contour);
+				Core.rectangle(object,new Point(rect.x,rect.y),
+						new Point(rect.x+rect.width,rect.y+rect.height),
+						new Scalar(0,255,0),2);
+				Mat tmp = object.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
+				Mat ball = Mat.zeros(tmp.size(), tmp.type());
+				tmp.copyTo(ball);
+				//main.ImShow("Ball", ball);
+				
+				// Mise à l'échelle
+				Mat sroadSign = Highgui.imread(signfile);
+				Mat sObject = new Mat();
+				Imgproc.resize(ball, sObject, sroadSign.size());
+				Mat grayObject = new Mat(sObject.rows(),sObject.cols(),sObject.type());
+				Imgproc.cvtColor(sObject, grayObject, Imgproc.COLOR_BGRA2GRAY);
+				Core.normalize(grayObject, grayObject,0,255,Core.NORM_MINMAX);
+				Mat graySign = new Mat(sroadSign.rows(),sroadSign.cols(),sroadSign.type());
+				Imgproc.cvtColor(sroadSign, graySign, Imgproc.COLOR_BGRA2GRAY);
+				Core.normalize(graySign, graySign,0,255,Core.NORM_MINMAX);
+				
+				//Extraction des descripteurs et keypoints
+				FeatureDetector orbDetector = FeatureDetector.create(FeatureDetector.ORB);
+				DescriptorExtractor orbExtractor = DescriptorExtractor.create(DescriptorExtractor.ORB);
+				
+				MatOfKeyPoint objectKeypoints = new MatOfKeyPoint();
+				orbDetector.detect(grayObject, objectKeypoints);
+				
+				MatOfKeyPoint signKeypoints = new MatOfKeyPoint();
+				orbDetector.detect(grayObject, signKeypoints);
+				
+				Mat objectDescriptor = new Mat(ball.rows(),ball.cols(),ball.type());
+				orbExtractor.compute(grayObject, objectKeypoints, objectDescriptor);
+				
+				Mat signDescriptor = new Mat(sroadSign.rows(),sroadSign.cols(),sroadSign.type());
+				orbExtractor.compute(graySign, signKeypoints, signDescriptor);
+				
+				// Faire le matching
+				MatOfDMatch matchs = new MatOfDMatch();
+				DescriptorMatcher matcher = DescriptorMatcher.create(DescriptorMatcher.BRUTEFORCE);
+				matcher.match(objectDescriptor, signDescriptor,matchs);
+				
+				//System.out.println(matchs.total());
+				
+				Mat matchedImage = new Mat(sroadSign.rows(),sroadSign.cols()*2,sroadSign.type());
+				Features2d.drawMatches(sObject, objectKeypoints, sroadSign, signKeypoints, matchs, matchedImage);
+				//main.ImShow("matchs", matchedImage);
+				
+				
+				
+				// Méthode DescriptorMatcher
+				List<DMatch> matchesList = matchs.toList();
+				Double max_dist = 0.0;
+				Double min_dist = 100.0;
+		
+				for (int i = 0; i < matchesList.size(); i++) {
+				    Double dist = (double) matchesList.get(i).distance;
+				    if (dist < min_dist)
+				        min_dist = dist;
+				    if (dist > max_dist)
+				    max_dist = dist;
+				}
+		
+				LinkedList<DMatch> good_matches = new LinkedList<DMatch>();
+				for (int i = 0; i < matchesList.size(); i++)  {  
+				    if (matchesList.get(i).distance <= (3 * min_dist))
+				    good_matches.addLast(matchesList.get(i));
+				}
+				float[] distances = new float[good_matches.size()];
+				for(int i=0;i<good_matches.size();i++) {
+					distances[i]=good_matches.get(i).distance;
+				}
+				double moyenne = 0;
+				for (int i=0;i<distances.length; i++) {
+					moyenne+=distances[i];
+				}
+				total = moyenne/distances.length;
+				System.out.println(total);
+				//return total;
     }
+			
 }
-
-
+		return total;
+    }
+    }

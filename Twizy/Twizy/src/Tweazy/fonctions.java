@@ -152,7 +152,7 @@ public class fonctions {
         Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
         //System.out.println(contourArea+" "+Math.PI*radius[0]*radius[0]);
         //on dit que c'est un cercle si l'aire occupÃ© par le contour est a supÃ©rieure a  80% de l'aire occupÃ©e par un cercle parfait
-        if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.8) {
+        if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.5) {
             //System.out.println("Cercle");
             Core.circle(img, center, (int)radius[0], new Scalar(255, 0, 0), 2);
             Core.rectangle(img, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar (0, 255, 0), 2);

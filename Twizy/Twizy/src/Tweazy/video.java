@@ -40,10 +40,10 @@ public class video {
         VideoCapture camera = new VideoCapture("video1.avi");
         Mat PanneauAAnalyser = null;
         int i=0;
-        while (camera.read(frame) && i<120) {
+        while (camera.read(frame) && i<130) {
             //A completer
             if (detecte==true) {
-                for (int j=0;j<40;j++) {
+                for (int j=0;j<10;j++) {
                     camera.read(frame);
                 }
             }
@@ -59,7 +59,7 @@ public class video {
             List<MatOfPoint> ListeContours= fonctions.ExtractContours(saturee);
             //Pour tous les contours de la liste
             for (MatOfPoint contour: ListeContours){
-            	if(i==119) {
+            	//if(i==130) {
 	                objetrond=fonctions.DetectForm(frame,contour);
 	                int indexmax=identifiepanneau(objetrond);
 	                switch(indexmax){
@@ -79,7 +79,7 @@ public class video {
             vidpanel.repaint();
             i++;
         }
-    }
+    //}
 
 
     public static BufferedImage Mat2bufferedImage(Mat image) {

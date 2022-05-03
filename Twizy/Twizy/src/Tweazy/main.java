@@ -291,7 +291,7 @@ public class main extends JFrame {
         // va lire la vidéo si le nom est le bon
         while (camera.read(frame)) {
             if (detecte==true) {
-                for (int j=0;j<4;j++) {	// affiche une image sur j (ici 4 par exemple)
+                for (int j=0;j<1;j++) {	// affiche une image sur j (ici 4 par exemple)
                     camera.read(frame);
                 }
             }
@@ -319,26 +319,32 @@ public class main extends JFrame {
                     case -1:
                         break;
                     case 0:
+                    	System.out.println("Panneau 30 detecte");
                         panneau.setText("Panneau 30 detecte");
                         fileImg="ref30.jpg";
                         break;
                     case 1:
+                    	System.out.println("Panneau 50 detecte");
                         panneau.setText("Panneau 50 detecte");
                         fileImg="ref50.jpg";
                         break;
                     case 2:
+                    	System.out.println("Panneau 70 detecte");
                         panneau.setText("Panneau 70 detecte");
                         fileImg="ref70.jpg";
                         break;
                     case 3:
+                    	System.out.println("Panneau 90 detecte");
                         panneau.setText("Panneau 90 detecte");
                         fileImg="ref90.jpg";
                         break;
                     case 4:
+                    	System.out.println("Panneau 110 detecte");
                         panneau.setText("Panneau 110 detecte");
                         fileImg="ref110.jpg";
                         break;
                     case 5:
+                    	System.out.println("Panneau interdiction de depasser detecte");
                         panneau.setText("Panneau interdiction de depasser detecte");
                         fileImg="refdouble.jpg";
                         break;

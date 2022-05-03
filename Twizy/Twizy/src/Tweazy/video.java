@@ -59,20 +59,22 @@ public class video {
             List<MatOfPoint> ListeContours= fonctions.ExtractContours(saturee);
             //Pour tous les contours de la liste
             for (MatOfPoint contour: ListeContours){
-                objetrond=fonctions.DetectForm(frame,contour);
-                int indexmax=identifiepanneau(objetrond);
-                switch(indexmax){
-                    case -1:break;
-                    case 0:System.out.println("Panneau 30 detecte");break;
-                    case 1:System.out.println("Panneau 50 detecte");break;
-                    case 2:System.out.println("Panneau 70 detecte");break;
-                    case 3:System.out.println("Panneau 90 detecte");break;
-                    case 4:System.out.println("Panneau 110 detecte");break;
-                    case 5:System.out.println("Panneau interdiction de depasser detecte");break;
-                }
-                if (indexmax>=0) {
-                    detecte=true;
-                }
+            	if(i==119) {
+	                objetrond=fonctions.DetectForm(frame,contour);
+	                int indexmax=identifiepanneau(objetrond);
+	                switch(indexmax){
+	                    case -1:break;
+	                    case 0:System.out.println("Panneau 30 detecte");break;
+	                    case 1:System.out.println("Panneau 50 detecte");break;
+	                    case 2:System.out.println("Panneau 70 detecte");break;
+	                    case 3:System.out.println("Panneau 90 detecte");break;
+	                    case 4:System.out.println("Panneau 110 detecte");break;
+	                    case 5:System.out.println("Panneau interdiction de depasser detecte");break;
+	                }
+	                if (indexmax>=0) {
+	                    detecte=true;
+	                }
+	            }
             }
             vidpanel.repaint();
             i++;

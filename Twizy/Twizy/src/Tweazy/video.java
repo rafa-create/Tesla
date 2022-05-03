@@ -21,14 +21,15 @@ import org.opencv.highgui.VideoCapture;
 public class video {
     static {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-        //System.loadLibrary("opencv_ffmpeg2413_64");
+        /// ATTENTION : � changer pour chacun !!!
+        System.load("C:\\Users\\anaar\\Downloads\\opencv\\build\\x64\\vc12\\bin\\opencv_ffmpeg2413_64.dll");
     }
 
     static Mat imag = null;
     static boolean detecte = false;
 
     public static void main(String[] args) {
-        JFrame jframe = new JFrame("Detection de panneaux sur un flux vidéo");
+        JFrame jframe = new JFrame("Detection de panneaux sur un flux video");
         jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         JLabel vidpanel = new JLabel();
         jframe.setContentPane(vidpanel);
@@ -39,8 +40,7 @@ public class video {
         VideoCapture camera = new VideoCapture("video1.avi");
         Mat PanneauAAnalyser = null;
         int i=0;
-        while (camera.read(frame)) {
-            //i++;
+        while (camera.read(frame) && i<120) {
             //A completer
             if (detecte==true) {
                 for (int j=0;j<40;j++) {
@@ -55,14 +55,14 @@ public class video {
             Mat saturee=fonctions.seuillage(transformee, 6, 170, 110);
             Mat objetrond = null;
 
-            //Création d'une liste des contours a partir de l'image saturée
+            //Creation d'une liste des contours a partir de l'image saturee
             List<MatOfPoint> ListeContours= fonctions.ExtractContours(saturee);
             //Pour tous les contours de la liste
-            for (MatOfPoint contour: ListeContours  ){
+            for (MatOfPoint contour: ListeContours){
                 objetrond=fonctions.DetectForm(frame,contour);
                 int indexmax=identifiepanneau(objetrond);
                 switch(indexmax){
-                    case -1:;break;
+                    case -1:break;
                     case 0:System.out.println("Panneau 30 detecte");break;
                     case 1:System.out.println("Panneau 50 detecte");break;
                     case 2:System.out.println("Panneau 70 detecte");break;
@@ -75,12 +75,9 @@ public class video {
                 }
             }
             vidpanel.repaint();
+            i++;
         }
     }
-
-
-
-
 
 
     public static BufferedImage Mat2bufferedImage(Mat image) {
@@ -118,6 +115,4 @@ public class video {
         }
         return indexmax;
     }
-
-
 }

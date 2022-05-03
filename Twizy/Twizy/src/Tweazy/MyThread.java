@@ -14,8 +14,7 @@ public class MyThread extends Thread {
         System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
         //System.loadLibrary("opencv_ffmpeg2413_64");
     }
-    public MyThread(String videoName, JTextArea panneau, JPanel panel_1 )
-    {
+    public MyThread(String videoName, JTextArea panneau, JPanel panel_1 ){
         this.videoName = videoName;
         this.panneau = panneau;
         this.panel_1 = panel_1;

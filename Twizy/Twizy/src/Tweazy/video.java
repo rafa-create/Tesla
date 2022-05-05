@@ -38,7 +38,7 @@ public class video {
 
         
         Mat frame = new Mat();
-        VideoCapture camera = new VideoCapture("video1.avi");
+        VideoCapture camera = new VideoCapture("video2.avi");
         while (camera.read(frame)) {
             //A completer
             if (detecte==true) {
@@ -47,7 +47,6 @@ public class video {
                     System.out.println("1");
                 }
             }
-            System.out.println("sortieeeeee");
             detecte=false;
             ImageIcon image = new ImageIcon(Mat2bufferedImage(frame));
             vidpanel.setIcon(image);

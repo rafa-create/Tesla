@@ -47,7 +47,7 @@ import org.opencv.imgproc.Imgproc.*;
 
 
 public class fonctions {
-
+	public static double pourcentage= 0.4;
 
     //passe de BGR � HSV
     public static Mat BGRversHSV(Mat matriceBGR){
@@ -145,23 +145,21 @@ public class fonctions {
         Point center = new Point();
         Rect rect = Imgproc.boundingRect(contour);
         double contourArea = Imgproc.contourArea(contour);
+        
 
 
         matOfPoint2f.fromList(contour.toList());
         // Cherche le plus petit cercle entourant le contour
         Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
-        //System.out.println(contourArea+" "+Math.PI*radius[0]*radius[0]);
-        //on dit que c'est un cercle si l'aire occupÃ© par le contour est a supÃ©rieure a  80% de l'aire occupÃ©e par un cercle parfait
-        if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.3) {
-            //System.out.println("Cercle");
+        //on dit que c'est un cercle si l'aire occupe par le contour est superieure a 50% de l'aire occupee par un cercle parfait
+        if ((contourArea / (Math.PI*radius[0]*radius[0]))>=pourcentage){
             Core.circle(img, center, (int)radius[0], new Scalar(255, 0, 0), 2);
             Core.rectangle(img, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar (0, 255, 0), 2);
             Mat tmp = img.submat(rect.y,rect.y+rect.height,rect.x,rect.x+rect.width);
             Mat sign = Mat.zeros(tmp.size(),tmp.type());
             tmp.copyTo(sign);
             return sign;
-        }else {
-
+        }else{
             Imgproc.approxPolyDP(matOfPoint2f, approxCurve, Imgproc.arcLength(matOfPoint2f, true) * 0.02, true);
             long total = approxCurve.total();
             if (total == 3 ) { // is triangle
@@ -248,7 +246,7 @@ public class fonctions {
 			double contourArea = Imgproc.contourArea(contour);
 			matOfPoint2f.fromList(contour.toList());
 			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
-			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8) {
+			if((contourArea/(Math.PI*radius[0]*radius[0]))>=pourcentage) {
 				Core.circle(object, center, (int)radius[0], new Scalar(0,255,0),2);
 			}
 		}
@@ -256,13 +254,11 @@ public class fonctions {
 	
 		// Reconnaissance balles_rouges
 		for(int c=0; c<listContours.size();c++) {
-
-			
 			MatOfPoint contour = listContours.get(c);
 			double contourArea = Imgproc.contourArea(contour);
 			matOfPoint2f.fromList(contour.toList());
 			Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
-			if((contourArea/(Math.PI*radius[0]*radius[0]))>=0.8){
+			if((contourArea/(Math.PI*radius[0]*radius[0]))>=pourcentage){
 				Core.circle(object, center, (int)radius[0], new Scalar(0,255,0),2);
 				Rect rect = Imgproc.boundingRect(contour);
 				Core.rectangle(object,new Point(rect.x,rect.y),
@@ -273,7 +269,7 @@ public class fonctions {
 				tmp.copyTo(ball);
 				//main.ImShow("Ball", ball);
 				
-				// Mise à l'echelle
+				// Mise a l'echelle
 				Mat sroadSign = Highgui.imread(signfile);
 				Mat sObject = new Mat();
 				Imgproc.resize(ball, sObject, sroadSign.size());
@@ -342,9 +338,8 @@ public class fonctions {
 				total = moyenne/distances.length;
 				//System.out.println(total);
 				//return total;
-    }
-			
-}
+			}
+		}
 		return total;
     }
-    }
+}

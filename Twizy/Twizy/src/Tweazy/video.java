@@ -36,17 +36,18 @@ public class video {
         jframe.setSize(720, 480);
         jframe.setVisible(true);
 
+        
         Mat frame = new Mat();
         VideoCapture camera = new VideoCapture("video1.avi");
-        Mat PanneauAAnalyser = null;
-        int i=0;
-        while (camera.read(frame) && i<130) {
+        while (camera.read(frame)) {
             //A completer
             if (detecte==true) {
                 for (int j=0;j<10;j++) {
                     camera.read(frame);
+                    System.out.println("1");
                 }
             }
+            System.out.println("sortieeeeee");
             detecte=false;
             ImageIcon image = new ImageIcon(Mat2bufferedImage(frame));
             vidpanel.setIcon(image);
@@ -59,25 +60,23 @@ public class video {
             List<MatOfPoint> ListeContours= fonctions.ExtractContours(saturee);
             //Pour tous les contours de la liste
             for (MatOfPoint contour: ListeContours){
-            	//if(i==130) {
-	                objetrond=fonctions.DetectForm(frame,contour);
-	                int indexmax=identifiepanneau(objetrond);
-	                switch(indexmax){
-	                    case -1:break;
-	                    case 0:System.out.println("Panneau 30 detecte");break;
-	                    case 1:System.out.println("Panneau 50 detecte");break;
-	                    case 2:System.out.println("Panneau 70 detecte");break;
-	                    case 3:System.out.println("Panneau 90 detecte");break;
-	                    case 4:System.out.println("Panneau 110 detecte");break;
-	                    case 5:System.out.println("Panneau interdiction de depasser detecte");break;
-	                }
-	                if (indexmax>=0) {
-	                    detecte=true;
-	                }
-	            }
+                objetrond=fonctions.DetectForm(frame,contour);
+                int indexmax=identifiepanneau(objetrond);
+                switch(indexmax){
+                    case -1:break;
+                    case 0:System.out.println("Panneau 30 detecte");break;
+                    case 1:System.out.println("Panneau 50 detecte");break;
+                    case 2:System.out.println("Panneau 70 detecte");break;
+                    case 3:System.out.println("Panneau 90 detecte");break;
+                    case 4:System.out.println("Panneau 110 detecte");break;
+                    case 5:System.out.println("Panneau interdiction de depasser detecte");break;
+                }
+                if (indexmax>=0) {
+                    detecte=true;
+                }
+            }
             }
             vidpanel.repaint();
-            i++;
         }
     //}
 

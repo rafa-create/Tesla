@@ -106,7 +106,7 @@ public class fonctions {
         Core.compare(channels.get(1),saturation,sat , Core.CMP_GT);
         Core.bitwise_or(rouges,rouges2,oupsi);
         Core.bitwise_and(oupsi,sat,finale);
-        //image saturée a retourner
+        //image saturee a retourner
         return finale;
     }
 
@@ -152,7 +152,7 @@ public class fonctions {
         Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
         //System.out.println(contourArea+" "+Math.PI*radius[0]*radius[0]);
         //on dit que c'est un cercle si l'aire occupÃ© par le contour est a supÃ©rieure a  80% de l'aire occupÃ©e par un cercle parfait
-        if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.5) {
+        if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.3) {
             //System.out.println("Cercle");
             Core.circle(img, center, (int)radius[0], new Scalar(255, 0, 0), 2);
             Core.rectangle(img, new Point(rect.x,rect.y), new Point(rect.x+rect.width,rect.y+rect.height), new Scalar (0, 255, 0), 2);

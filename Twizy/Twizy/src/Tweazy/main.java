@@ -24,6 +24,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.Color;
 import java.awt.EventQueue;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.Toolkit;
 
 import java.io.ByteArrayInputStream;
@@ -33,7 +35,7 @@ import java.io.InputStream;
 
 public class main extends JFrame {
 
-    static boolean detecte = false;		// on l'initialise � false parce qu'au d�but de la vid�o on consid�re qu'il n'y a pas forcement de panneau
+    static boolean detecte = true;
     private JPanel contentPane;
     private JTextField imgFile;
     private JTextArea panneau;
@@ -98,7 +100,7 @@ public class main extends JFrame {
             public void actionPerformed(ActionEvent arg0) {
                 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
                 Mat m=Highgui.imread(imgFile.getText(),Highgui.CV_LOAD_IMAGE_COLOR);
-                //Conversion du panneau extrait de l'image en gris et normalisation et redimensionnement a la taille du panneau de reference
+                //Conversion du panneau extrait de l'image en gris et normalisation et redimensionnement a la taille du panneau de rÃ©ference
                 Mat grayObject = new Mat(m.rows(), m.cols(), m.type());
                 Imgproc.cvtColor(m, grayObject, Imgproc.COLOR_BGRA2GRAY);
                 panel_1.removeAll();
@@ -182,88 +184,91 @@ public class main extends JFrame {
 
         JButton btnMatching = new JButton("Detection");
         btnMatching.addActionListener(new ActionListener() {
-              public void actionPerformed(ActionEvent e) {
-                  String fileImg = "";
-                  //Ouverture de l'image et saturation des rouges
-                  System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-                  Mat m=Highgui.imread(imgFile.getText(),Highgui.CV_LOAD_IMAGE_COLOR);
-                  //fonctions.afficheImage("Image testee", m);
-                  Mat transformee=fonctions.BGRversHSV(m);
-                  //la methode seuillage est ici extraite de l'archivage jar du meme nom
-                  Mat saturee=fonctions.seuillage(transformee, 6, 170, 90);
-                  Mat objetrond = null;
+                                          public void actionPerformed(ActionEvent e) {
+                                              String fileImg = "";
+                                              //Ouverture le l'image et saturation des rouges
+                                              System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
+                                              Mat m=Highgui.imread(imgFile.getText(),Highgui.CV_LOAD_IMAGE_COLOR);
+                                              //fonctions.afficheImage("Image testÃ©e", m);
+                                              Mat transformee=fonctions.BGRversHSV(m);
+                                              //la methode seuillage est ici extraite de l'archivage jar du meme nom
+                                              Mat saturee=fonctions.seuillage(transformee, 6, 170, 90);
+                                              Mat objetrond = null;
 
-                  //Creation d'une liste des contours a partir de l'image saturee
-                  List<MatOfPoint> ListeContours= fonctions.ExtractContours(saturee);
-                  double [] scores=new double [6];
-                  //Pour tous les contours de la liste
-                  for (MatOfPoint contour: ListeContours  ){
-                      objetrond=fonctions.DetectForm(m,contour);
+                                              //CrÃ©ation d'une liste des contours a partir de l'image saturÃ©e
+                                              List<MatOfPoint> ListeContours= fonctions.ExtractContours(saturee);
+                                              double [] scores=new double [6];
+                                              //Pour tous les contours de la liste
+                                              for (MatOfPoint contour: ListeContours  ){
+                                                  objetrond=fonctions.DetectForm(m,contour);
+                                                  
 
-                      if (objetrond!=null){
-                          scores[0]=fonctions.Similitude(objetrond,"ref30.jpg");
-                          scores[1]=fonctions.Similitude(objetrond,"ref50.jpg");
-                          scores[2]=fonctions.Similitude(objetrond,"ref70.jpg");
-                          scores[3]=fonctions.Similitude(objetrond,"ref90.jpg");
-                          scores[4]=fonctions.Similitude(objetrond,"ref110.jpg");
-                          scores[5]=fonctions.Similitude(objetrond,"refdouble.jpg");
+                                                  if (objetrond!=null){
+                                                	  //ImShow("bub",objetrond);
+                                                      scores[0]=fonctions.Similitude(objetrond,"ref30.jpg");
+                                                      scores[1]=fonctions.Similitude(objetrond,"ref50.jpg");
+                                                      scores[2]=fonctions.Similitude(objetrond,"ref70.jpg");
+                                                      scores[3]=fonctions.Similitude(objetrond,"ref90.jpg");
+                                                      scores[4]=fonctions.Similitude(objetrond,"ref110.jpg");
+                                                      scores[5]=fonctions.Similitude(objetrond,"refdouble.jpg");
 
 
-                          //recherche de l'index du maximum et affichage du panneau detecte
-                          double scoremax=-1;
-                          int indexmax=0;
-                          for(int j=0;j<scores.length;j++){
-                              if (scores[j]>scoremax){scoremax=scores[j];indexmax=j;}}
-                          if(scoremax<0){System.out.println("Aucun Panneau detecte");}
-                          else{switch(indexmax){
+                                                      //recherche de l'index du maximum et affichage du panneau detectÃ©
+                                                      double scoremax=-1;
+                                                      int indexmax=0;
+                                                      for(int j=0;j<scores.length;j++){
+                                                          if (scores[j]>scoremax){scoremax=scores[j];indexmax=j;}}
+                                                      if(scoremax<0){System.out.println("Aucun Panneau detecte");}
+                                                      else{switch(indexmax){
 
-                              case -1:;break;
-                              case 0:
-                                  panneau.setText("Panneau 30 detecte");
-                                  fileImg="ref30.jpg";
-                                  break;
-                              case 1:
-                                  panneau.setText("Panneau 50 detecte");
-                                  fileImg="ref50.jpg";
-                                  break;
-                              case 2:
-                                  panneau.setText("Panneau 70 detecte");
-                                  fileImg="ref70.jpg";
-                                  break;
-                              case 3:
-                                  panneau.setText("Panneau 90 detecte");
-                                  fileImg="ref90.jpg";
-                                  break;
-                              case 4:
-                                  panneau.setText("Panneau 110 detecte");
-                                  fileImg="ref110.jpg";
-                                  break;
-                              case 5:
-                                  panneau.setText("Panneau interdiction de depasser detecte");
-                                  fileImg="refdouble.jpg";
-                                  break;
-                          	}
-                          }
+                                                          case -1:;break;
+                                                          case 0:
+                                                              panneau.setText("Panneau 30 detecte");
+                                                              fileImg="ref30.jpg";
+                                                              break;
+                                                          case 1:
+                                                              panneau.setText("Panneau 50 detecte");
+                                                              fileImg="ref50.jpg";
+                                                              break;
+                                                          case 2:
+                                                              panneau.setText("Panneau 70 detecte");
+                                                              fileImg="ref70.jpg";
+                                                              break;
+                                                          case 3:
+                                                              panneau.setText("Panneau 90 detecte");
+                                                              fileImg="ref90.jpg";
+                                                              break;
+                                                          case 4:
+                                                              panneau.setText("Panneau 110 detecte");
+                                                              fileImg="ref110.jpg";
+                                                              break;
+                                                          case 5:
+                                                              panneau.setText("Panneau interdiction de depasser detecte");
+                                                              fileImg="refdouble.jpg";
+                                                              break;
+                                                      }
+                                                      }
 
-                      }
-                  }
-                  ImageIcon IMAGE = new ImageIcon(Toolkit.getDefaultToolkit().createImage(fileImg));
-                  panel_2.removeAll();
-                  //panel_2.repaint();
-                  panel_2.add(new JLabel(IMAGE));
-                  validate();
-              }
-          }
+                                                  }
+                                              }
+                                              ImageIcon IMAGE = new ImageIcon(Toolkit.getDefaultToolkit().createImage(fileImg));
+                                              panel_2.removeAll();
+                                              panel_2.repaint();
+                                              panel_2.add(new JLabel(IMAGE));
+                                              validate();
+                                          }
+                                      }
         );
         btnMatching.setBounds(10, 181, 140, 20);
         panel.add(btnMatching);
 
         panneau = new JTextArea();
-        panneau.setBounds(10, 510, 540, 20);
+        panneau.setBounds(10, 510, 140, 20);
         panel.add(panneau);
         panneau.setColumns(10);
 
-      ///detection 2
+
+        ///detection 2
         JButton btnMatching2 = new JButton("Detection2");
         btnMatching2.addActionListener(new ActionListener() {
                                           public void actionPerformed(ActionEvent e) {
@@ -358,8 +363,6 @@ public class main extends JFrame {
         panneau.setBounds(10, 510, 140, 20);
         panel.add(panneau);
         panneau.setColumns(10);
-        
-        
         //Bouton Video 
         JButton btnVideo = new JButton("Lancer la video");
         btnVideo.addActionListener(new ActionListener() {

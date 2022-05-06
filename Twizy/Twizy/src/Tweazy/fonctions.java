@@ -409,6 +409,6 @@ public class fonctions {
 		   percentage = (avg/255)*100;
 		   
 		}
-		return percentage;
+		return 100-percentage;
 		}	
 }

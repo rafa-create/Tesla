@@ -1,9 +1,13 @@
 package Tweazy;
 
+import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -231,7 +235,7 @@ public class fonctions {
 		return threshold_img;
 	}
 	
-//cette fonction renvoie un score de comparaison entre deux images
+//cette fonction renvoie un score de comparaison entre deux images en utilisant un matching de certains points des images
     public static double Similitude(Mat object,String signfile) {
     	double total = 0.0;
     	
@@ -342,4 +346,69 @@ public class fonctions {
 		}
 		return total;
     }
+    
+    
+    public static BufferedImage Mat2bufferedImage(Mat image) {
+        MatOfByte bytemat = new MatOfByte();
+        Highgui.imencode(".jpg", image, bytemat);
+        byte[] bytes = bytemat.toArray();
+        InputStream in = new ByteArrayInputStream(bytes);
+        BufferedImage img = null;
+        try {
+            img = ImageIO.read(in);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return img;
+    }
+    
+    //on compare les couleurs des pixels 1 par 1
+    //img1 : panneau extrait img : image ref
+    public static double Similitude2(BufferedImage img1,String signfile) {
+    	Mat img = Highgui.imread(signfile); 
+		BufferedImage img2 = Mat2bufferedImage(img);
+    	
+		double percentage = 0;
+		int w = img2.getWidth();  
+		int h = img2.getHeight();  
+		BufferedImage dimg = new BufferedImage(img1.getWidth(), img1.getHeight(), img2.getType());  
+		Graphics2D g = dimg.createGraphics();  
+		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+		RenderingHints.VALUE_INTERPOLATION_BILINEAR);  
+		g.drawImage(img2, 0, 0, img1.getWidth(), img1.getHeight(), 0, 0, w, h, null);  
+		g.dispose(); 
+		  
+		int w1 = dimg.getWidth();
+		int w2 = img1.getWidth();
+		int h1 = dimg.getHeight();
+		int h2 = img1.getHeight();
+		if ((w1!=w2)||(h1!=h2)) {
+		   System.out.println("Both images should have same dimensions");
+		} else {
+		   long diff = 0;
+		   for (int j = 0; j < h1; j++) {
+		      for (int i = 0; i < w1; i++) {
+		         //Getting the RGB values of a pixel
+		         int pixel1 = img1.getRGB(i, j);
+		         Color color1 = new Color(pixel1, true);
+		         int r1 = color1.getRed();
+		         int g1 = color1.getGreen();
+		         int b1 = color1.getBlue();
+		         int pixel2 = dimg.getRGB(i, j);
+		         Color color2 = new Color(pixel2, true);
+		         int r2 = color2.getRed();
+		         int g2 = color2.getGreen();
+		         int b2= color2.getBlue();
+		         //sum of differences of RGB values of the two images
+		         long data = Math.abs(r1-r2)+Math.abs(g1-g2)+ Math.abs(b1-b2);
+		         diff = diff+data;
+		      }
+		   }
+		   double avg = diff/(w1*h1*3);
+		   percentage = (avg/255)*100;
+		   
+		}
+		return percentage;
+		}	
 }

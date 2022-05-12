@@ -155,7 +155,7 @@ public class fonctions {
         // Cherche le plus petit cercle entourant le contour
         Imgproc.minEnclosingCircle(matOfPoint2f, center, radius);
         //System.out.println(contourArea+" "+Math.PI*radius[0]*radius[0]);
-        //on dit que c'est un cercle si l'aire occupÃ© par le contour est a supÃ©rieure a  80% de l'aire occupÃ©e par un cercle parfait
+        //on dit que c'est un cercle si l'aire occupÃ© par le contour est a superieure a  80% de l'aire occupee par un cercle parfait
         if ((contourArea / (Math.PI*radius[0]*radius[0])) >=0.8) {
             //System.out.println("Cercle");
             Core.circle(img, center, (int)radius[0], new Scalar(255, 0, 0), 2);

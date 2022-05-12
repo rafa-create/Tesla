@@ -468,6 +468,7 @@ public class main extends JFrame {
             //panel_2.repaint();		// enlevé pour que les panneaux restent affichés tant qu'un autre panneau n'est pas apparu
             panel_2.add(new JLabel(new ImageIcon(fileImg)));
             panel_2.validate();
+        }
     }
 
     public static int identifiepanneau(Mat objetrond){

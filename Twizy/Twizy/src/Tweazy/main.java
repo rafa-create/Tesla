@@ -57,44 +57,54 @@ public class main extends JFrame {
 
     public main() {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setBounds(50, 1, 1200, 700);
+        setBounds(50, 1, 1200, 700);						// ouvre la fenêtre avec sa taille
         contentPane = new JPanel();
-        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
+        contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));	// donne la taille des contours
         setContentPane(contentPane);
         contentPane.setLayout(null);
-        contentPane.setBackground(Color.lightGray);
+        contentPane.setBackground(Color.black);	// couleur du contour
         JPanel panel = new JPanel();
         panel.setBounds(10, 10, 1164, 639);
-        contentPane.add(panel);
+        contentPane.add(panel);					// place les contours
         panel.setLayout(null);
-
+        panel.setBackground(Color.blue);
+        
+        
         panel_1 = new JPanel();
-        panel_1.setBounds(274, 46, 880, 582); //emplacement image a detecter
+        panel_1.setBounds(10, 130, 800, 500); //emplacement image a detecter
         panel.add(panel_1);
+        panel_1.setBackground(Color.blue);
 
+        
         panel_2 = new JPanel();
-        panel_2.setBounds(10, 250, 254, 254); //emplacement panneau detecte
+        panel_2.setBounds(900, 250, 254, 254); //emplacement panneau detecte
         panel.add(panel_2);
-
+        panel_2.setBackground(Color.red);
+        
+        
+        // BOUTON PERMETTANT DE CHARGER UNE IMAGE
         JButton btnChargerImage = new JButton("Charger Image");
         btnChargerImage.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
                 Mat m=Highgui.imread(imgFile.getText(),Highgui.CV_LOAD_IMAGE_COLOR);
-                panel_1.removeAll();
+                panel_1.removeAll();			// retire une image de "panel_1" si il y en avait déjà une
                 panel_1.repaint();
                 panel_1.add(new JLabel(new ImageIcon(Mat2bufferedImage(m))));
                 validate();
             }
         });
-
-        btnChargerImage.setBounds(10, 10, 140, 20);
+        
+        // PLACEMENT DU BOUTON "CHARGER IMAGE"
+        btnChargerImage.setBounds(10, 10, 140, 30);
         panel.add(btnChargerImage);
-
+		
+        // PLACEMENT DE LA FENETRE PERMETTANT DE RENTRER LE NOM DE L'IMAGE OU DE LA VIDEO
         imgFile = new JTextField();
-        imgFile.setBounds(155, 10, 140, 20);
+        imgFile.setBounds(10, 50, 140, 20);
         panel.add(imgFile);
-
+        
+        // BOUTON NIVEAU DE GRIS
         JButton btnNiveauGris = new JButton("Niveau de gris");
         btnNiveauGris.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
@@ -109,9 +119,11 @@ public class main extends JFrame {
                 validate();
             }
         });
-        btnNiveauGris.setBounds(10, 45, 140, 20);
+        // PLACEMENT BOUTON NIVEAU DE GRIS
+        btnNiveauGris.setBounds(1010, 10, 140, 30);
         panel.add(btnNiveauGris);
-
+        
+        // BOUTON MISE DE L'IMAGE EN HSV
         JButton btnButtonHSV = new JButton("HSV");
         btnButtonHSV.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -128,9 +140,12 @@ public class main extends JFrame {
                 validate();
             }
         });
-        btnButtonHSV.setBounds(10, 80, 140, 20);
+        
+        // PLACEMENT DU BOUTON HSV
+        btnButtonHSV.setBounds(1010, 50, 140, 30);
         panel.add(btnButtonHSV);
-
+        
+        // BOUTON IMAGE SATUREE EN ROUGE
         JButton btnSaturationRouge = new JButton("Saturation Rouge");
         btnSaturationRouge.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -145,9 +160,12 @@ public class main extends JFrame {
                 validate();
             }
         });
-        btnSaturationRouge.setBounds(10, 115, 140, 20);
+        
+        // PLACEMENT DU BOUTON SATURATION ROUGE
+        btnSaturationRouge.setBounds(1010, 90, 140, 30);
         panel.add(btnSaturationRouge);
-
+        
+        // BOUTON DETECTE CONTOURS
         JButton btnContours = new JButton("Detecte contours");
         btnContours.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -179,9 +197,12 @@ public class main extends JFrame {
 
             }
         });
-        btnContours.setBounds(10, 150, 140, 20);
+        
+        // PLACEMENT DU BOUTON DETECTE CONTOURS
+        btnContours.setBounds(1010, 130, 140, 30);
         panel.add(btnContours);
-
+        
+        // BOUTON DETECTION QUI NE FONCTIONNE PAS BIEN (NE DETECTE PAS LE BON PANNEAU)
         JButton btnMatching = new JButton("Detection");
         btnMatching.addActionListener(new ActionListener() {
                       public void actionPerformed(ActionEvent e) {
@@ -259,16 +280,19 @@ public class main extends JFrame {
                       }
                   }
         );
-        btnMatching.setBounds(10, 181, 140, 20);
+        
+        // PLACEMENT DU MAUVAIS BOUTON DETECTION
+        btnMatching.setBounds(170, 10, 140, 30);
         panel.add(btnMatching);
 
+        //PLACEMENT DE LA FENETRE NOM DU PANNEAU DETECTE
         panneau = new JTextArea();
-        panneau.setBounds(10, 510, 140, 20);
+        panneau.setBounds(1010, 510, 140, 30);
         panel.add(panneau);
         panneau.setColumns(10);
 
 
-        ///detection 2
+        // BOUTON DETECTION QUI FONCTIONNE
         JButton btnMatching2 = new JButton("Detection2");
         btnMatching2.addActionListener(new ActionListener() {
                           public void actionPerformed(ActionEvent e) {
@@ -348,14 +372,12 @@ public class main extends JFrame {
                           }
                       }
         );
-        btnMatching2.setBounds(10, 220, 140, 20);
+        
+        // PLACEMENT DU BOUTON DETECTION QUI FONCTIONNE
+        btnMatching2.setBounds(330, 10, 140, 30);
         panel.add(btnMatching2);
 
-        panneau = new JTextArea();
-        panneau.setBounds(10, 510, 140, 20);
-        panel.add(panneau);
-        panneau.setColumns(10);
-        //Bouton Video 
+        // BOUTON VIDEO
         JButton btnVideo = new JButton("Lancer la video");
         btnVideo.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -364,14 +386,15 @@ public class main extends JFrame {
                 /// ATTENTION : à changer pour chacun !!!
                 System.load("C:\\Users\\anaar\\Downloads\\opencv\\build\\x64\\vc12\\bin\\opencv_ffmpeg2413_64.dll");
                 
-                //System.loadLibrary("opencv_ffmpeg2413_64");
                 MyThread thread = new MyThread(imgFile.getText(),panneau,panel_1);
                 thread.start();
             }
         });
-        btnVideo.setBounds(300, 11, 140, 20);
+        
+        // PLACEMENT DU BOUTON VIDEO
+        btnVideo.setBounds(10, 80, 140, 30);
         panel.add(btnVideo);
-
+	//*/
     }
 
     public static void LectureVideo(String nomVideo, JTextArea panneau, JPanel panel_1 ) {

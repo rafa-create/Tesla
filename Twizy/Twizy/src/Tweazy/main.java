@@ -79,7 +79,7 @@ public class main extends JFrame {
         panel_2 = new JPanel();
         panel_2.setBounds(900, 250, 254, 254); //emplacement panneau detecte
         panel.add(panel_2);
-        panel_2.setBackground(Color.red);
+        panel_2.setBackground(Color.BLUE);
         
         
         // BOUTON PERMETTANT DE CHARGER UNE IMAGE

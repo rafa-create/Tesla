@@ -31,7 +31,7 @@ import java.awt.Toolkit;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
+import java.sql.*;
 
 public class main extends JFrame {
 
@@ -41,10 +41,24 @@ public class main extends JFrame {
     private JTextArea panneau;
     private JPanel panel_1 ;
     private static JPanel panel_2 ;
+    private static Statement stmt;
 
     public static void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
+            	try {
+            		Class.forName("com.mysql.jdbc.Driver");
+                    Connection con=DriverManager.getConnection(
+                            "jdbc:mysql://localhost:3306/twizzy","root","");//connection à la base de donnée
+                    stmt=con.createStatement(); 
+                  //initialisation des tables de la base de données :
+                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS 32_descripteurs_points_interets (points_interets VARCHAR(20))");
+                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS point_interets_panneaux (panneau20 VARCHAR(20), panneau30 VARCHAR(20),panneau40 VARCHAR(20),panneau50 VARCHAR(20),panneau60 VARCHAR(20),panneau70 VARCHAR(20),panneau80 VARCHAR(20),panneau90 VARCHAR(20),panneau100 VARCHAR(20),panneau110 VARCHAR(20),panneau120 VARCHAR(20),panneau130 VARCHAR(20))");
+                    stmt.executeUpdate("CREATE TABLE IF NOT EXISTS panneaux_croisees (id_panneau INT PRIMARY KEY NOT NULL AUTO_INCREMENT, nom_panneau VARCHAR(20))");
+            	}
+            	catch (Exception err) {
+                    err.printStackTrace();
+            	}
                 try {
                     main frame = new main();
                     frame.setVisible(true);
@@ -246,26 +260,57 @@ public class main extends JFrame {
                                       case 0:
                                           panneau.setText("Panneau 30 detecte");
                                           fileImg="ref30.jpg";
+									try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 30')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
+
                                           break;
                                       case 1:
                                           panneau.setText("Panneau 50 detecte");
                                           fileImg="ref50.jpg";
+                                          try {
+      										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 50')");
+      									} catch (SQLException e1) {
+      										e1.printStackTrace();
+      									}
                                           break;
                                       case 2:
                                           panneau.setText("Panneau 70 detecte");
                                           fileImg="ref70.jpg";
+                                          try {
+      										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 70')");
+      									} catch (SQLException e1) {
+      										e1.printStackTrace();
+      									}
                                           break;
                                       case 3:
                                           panneau.setText("Panneau 90 detecte");
+                                          try {
+      										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 90')");
+      									} catch (SQLException e1) {
+      										e1.printStackTrace();
+      									}
                                           fileImg="ref90.jpg";
                                           break;
                                       case 4:
                                           panneau.setText("Panneau 110 detecte");
                                           fileImg="ref110.jpg";
+                                          try {
+      										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 110')");
+      									} catch (SQLException e1) {
+      										e1.printStackTrace();
+      									}
                                           break;
                                       case 5:
                                           panneau.setText("Panneau interdiction de depasser detecte");
                                           fileImg="refdouble.jpg";
+                                          try {
+      										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau interdiction de depasser detecte')");
+      									} catch (SQLException e1) {
+      										e1.printStackTrace();
+      									}
                                           break;
                                   }
                                   }
@@ -338,37 +383,70 @@ public class main extends JFrame {
                                         case 0:
                                             panneau.setText("Panneau 30 detecte");
                                             fileImg="ref30.jpg";
+                                            try {
+          										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 30')");
+          									} catch (SQLException e1) {
+          										e1.printStackTrace();
+          									}
                                             break;
                                         case 1:
                                             panneau.setText("Panneau 50 detecte");
                                             fileImg="ref50.jpg";
+                                            try {
+          										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 50')");
+          									} catch (SQLException e1) {
+          										e1.printStackTrace();
+          									}
                                             break;
                                         case 2:
                                             panneau.setText("Panneau 70 detecte");
                                             fileImg="ref70.jpg";
+                                            try {
+          										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 70')");
+          									} catch (SQLException e1) {
+          										e1.printStackTrace();
+          									}
+                                            
                                             break;
                                         case 3:
                                             panneau.setText("Panneau 90 detecte");
                                             fileImg="ref90.jpg";
+                                            try {
+          										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 90')");
+          									} catch (SQLException e1) {
+          										e1.printStackTrace();
+          									}
                                             break;
                                         case 4:
                                             panneau.setText("Panneau 110 detecte");
                                             fileImg="ref110.jpg";
+                                            try {
+          										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 110')");
+          									} catch (SQLException e1) {
+          										e1.printStackTrace();
+          									}
                                             break;
                                         case 5:
                                             panneau.setText("Panneau interdiction de depasser detecte");
                                             fileImg="refdouble.jpg";
+                                            try {
+          										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau interdiction de depasser detecte')");
+          									} catch (SQLException e1) {
+          										e1.printStackTrace();
+          									}
                                             break;
                                     	}
                                     }
 
                                   }
                               }
+                              
                               ImageIcon IMAGE = new ImageIcon(Toolkit.getDefaultToolkit().createImage(fileImg));
                               panel_2.removeAll();
                               panel_2.repaint();
                               panel_2.add(new JLabel(IMAGE));
                               validate();
+                          
                           }
                       }
         );
@@ -459,25 +537,55 @@ public class main extends JFrame {
 		                    case 0:
 		                        panneau.setText("Panneau 30 detecte");
 		                        fileImg="ref30.jpg";
+                                try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 30')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 		                        break;
 		                    case 1:
 		                        panneau.setText("Panneau 50 detecte");
 		                        fileImg="ref50.jpg";
+                                try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 50')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 		                        break;
 		                    case 2:
+                                try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 70')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 		                        panneau.setText("Panneau 70 detecte");
 		                        fileImg="ref70.jpg";
 		                        break;
 		                    case 3:
 		                        panneau.setText("Panneau 90 detecte");
 		                        fileImg="ref90.jpg";
+		                        try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 90')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 		                        break;
 		                    case 4:
 		                        panneau.setText("Panneau 110 detecte");
+                                try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau 110')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 		                        fileImg="ref110.jpg";
 		                        break;
 		                    case 5:
 		                        panneau.setText("Panneau interdiction de depasser detecte");
+                                try {
+										stmt.executeUpdate("INSERT INTO panneaux_croisees (`nom_panneau` )VALUES ('Panneau interdiction de depasser ')");
+									} catch (SQLException e1) {
+										e1.printStackTrace();
+									}
 		                        fileImg="refdouble.jpg";
 		                        break;
 		                }

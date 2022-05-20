@@ -48,7 +48,7 @@ import org.opencv.highgui.Highgui;
 import org.opencv.imgproc.Imgproc;
 import org.opencv.imgproc.Imgproc.*;
 import java.awt.image.BufferedImage;
-
+import java.sql.*;
 
 public class fonctions {
 
@@ -349,6 +349,7 @@ public class fonctions {
 					moyenne+=distances[i];
 				}
 				total = moyenne/distances.length;
+				
 				//System.out.println(total);
 				//return total;
     }

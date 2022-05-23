@@ -480,9 +480,8 @@ public class main extends JFrame {
         Mat frame = new Mat();
         VideoCapture camera = new VideoCapture(nomVideo);
         
-        // va lire la vidéo si le nom est le bon
         while (camera.read(frame)) {
-            if (detecte==true) {
+            if (detecte==true) {			// si on detecte un panneau, on arrete pdt 40 images
                 for(int j=0;j<40;j++) {
                     camera.read(frame);
                 }
